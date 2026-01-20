@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PaaS Demo - TODO App (Render)</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      padding: 30px;
+    }
+    h1 {
+      color: #667eea;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+    .add-form {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+    input[type="text"] {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    button {
+      padding: 12px 25px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    button:hover { background: #5568d3; }
+    .task-list { list-style: none; }
+    .task-item {
+      background: #f8f9fa;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .task-item.completed {
+      opacity: 0.6;
+      text-decoration: line-through;
+    }
+    .task-title { flex: 1; font-size: 16px; }
+    .btn-small {
+      padding: 6px 12px;
+      font-size: 14px;
+    }
+    .btn-delete { background: #dc3545; }
+    .btn-delete:hover { background: #c82333; }
+    .info-box {
+      background: #e7f3ff;
+      border-left: 4px solid #2196F3;
+      padding: 15px;
+      margin-top: 30px;
+      border-radius: 5px;
+    }
+    .info-box strong { color: #2196F3; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📝 TODO List - Démo PaaS</h1>
+    <p class="subtitle">Application hébergée sur Render avec PostgreSQL</p>
+    
+    <form action="/add" method="POST" class="add-form">
+      <input type="text" name="title" placeholder="Ajouter une nouvelle tâche..." required>
+      <button type="submit">Ajouter</button>
+    </form>
+
+    <ul class="task-list">
+      <% if (tasks.length === 0) { %>
+        <li style="text-align: center; color: #999; padding: 40px;">
+          Aucune tâche. Ajoutez-en une pour tester le stockage cloud !
+        </li>
+      <% } else { %>
+        <% tasks.forEach(task => { %>
+          <li class="task-item <%= task.completed ? 'completed' : '' %>">
+            <span class="task-title"><%= task.title %></span>
+            <form action="/toggle/<%= task.id %>" method="POST" style="display: inline;">
+              <button type="submit" class="btn-small">
+                <%= task.completed ? '↩️ Activer' : '✅ Terminer' %>
+              </button>
+            </form>
+            <form action="/delete/<%= task.id %>" method="POST" style="display: inline;">
+              <button type="submit" class="btn-small btn-delete">🗑️ Supprimer</button>
+            </form>
+          </li>
+        <% }) %>
+      <% } %>
+    </ul>
+
+    <div class="info-box">
+      <strong>📊 Informations techniques :</strong><br>
+      • Modèle de service : <strong>PaaS (Platform as a Service)</strong><br>
+      • Modèle de déploiement : <strong>Cloud Public</strong><br>
+      • Plateforme : <strong>Render</strong><br>
+      • Stockage : <strong>PostgreSQL (Render)</strong><br>
+      • Total de tâches : <strong><%= tasks.length %></strong>
+    </div>
+  </div>
+</body>
+</html>
